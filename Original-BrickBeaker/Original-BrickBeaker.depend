@@ -1,0 +1,45 @@
+# depslib dependency file v1.0
+1681029090 source:f:\data\code\original-brickbeaker\ball.cpp
+	"Ball.h"
+
+1681029090 f:\data\code\original-brickbeaker\ball.h
+	<SDL.h>
+	<SDL_image.h>
+	<math.h>
+
+1681049216 source:f:\data\code\original-brickbeaker\field.cpp
+	"Field.h"
+
+1681049284 f:\data\code\original-brickbeaker\field.h
+	<stdlib.h>
+	<time.h>
+	<SDL.h>
+	<SDL_image.h>
+
+1681029895 source:f:\data\code\original-brickbeaker\main.cpp
+	"main.h"
+
+1680409072 f:\data\code\original-brickbeaker\main.h
+	"game.h"
+
+1681033098 f:\data\code\original-brickbeaker\game.h
+	<SDL.h>
+	<SDL_image.h>
+	<SDL_mixer.h>
+	<iostream>
+	<stdio.h>
+	"Field.h"
+	"Paddle.h"
+	"Ball.h"
+
+1681047406 f:\data\code\original-brickbeaker\paddle.h
+	<SDL.h>
+	<SDL_image.h>
+
+1681047413 source:f:\data\code\original-brickbeaker\paddle.cpp
+	"Paddle.h"
+
+1681033009 source:f:\data\code\original-brickbeaker\game.cpp
+	"Game.h"
+	<math.h>
+
