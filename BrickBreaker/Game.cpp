@@ -269,68 +269,15 @@ void Game::BrickCollision() {
 }
 
 void Game::SideCollision(int sidehit)
- {
-    // sidehit 0: Left, 1: Top, 2: Right, 3: Bottom
-
-    // coeficient factor
+{
+    // sidehit 0: Left, 1: Bottom, 2: Right, 3: Top
     int cx = 1;
     int cy = 1;
+    if(sidehit == 0 || sidehit == 2)
+        cx = -1;
+    else
+        cy = -1;
 
-    if (ball->dirx > 0)
-    {
-        if (ball->diry > 0)
-        {
-            // +1 +1
-            if (sidehit == 0 || sidehit == 3)
-            {
-                cx = -1;
-            }
-            else
-            {
-                cy = -1;
-            }
-        }
-        else if (ball->diry < 0)
-        {
-            // +1 -1
-            if (sidehit == 0 || sidehit == 1)
-            {
-                cx = -1;
-            }
-            else
-            {
-                cy = -1;
-            }
-        }
-    }
-    else if (ball->dirx < 0)
-    {
-        if (ball->diry > 0)
-            {
-            // -1 +1
-            if (sidehit == 2 || sidehit == 3)
-            {
-                cx = -1;
-            }
-            else
-            {
-                cy = -1;
-            }
-        }
-        else if (ball->diry < 0)
-        {
-            // -1 -1
-            if (sidehit == 1 || sidehit == 2)
-            {
-                cx = -1;
-            }
-            else
-            {
-                cy = -1;
-            }
-        }
-    }
-    // Set the new direction by multiplying the coefficient
     ball->SetDirection(cx*ball->dirx, cy*ball->diry);
 }
 
