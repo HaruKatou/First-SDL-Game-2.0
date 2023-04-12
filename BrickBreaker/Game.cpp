@@ -33,6 +33,13 @@ bool Game::Init()   //Initialize SDL
             printf( "Renderer could not be created! SDL Error: %s\n", SDL_GetError() );
             success = false;
         }
+        //create music
+        music = Mix_LoadMUS( "Will.wav" );
+        if( music == NULL)
+        {
+        printf( "Failed to load beat music! SDL_mixer Error: %s\n", Mix_GetError() );
+        success = false;
+        }
     }
     lastframe = SDL_GetTicks();
     return success;
@@ -87,6 +94,8 @@ void Game::Run() //How the game works
 
 void Game::CleanUp()
 {
+    Mix_FreeMusic(music);
+
     SDL_DestroyTexture(texture);
 
     SDL_DestroyRenderer(renderer);
@@ -98,6 +107,7 @@ void Game::StartGame()
 {
     field->CreateBricks();
     ResetPaddle();
+    PlayMusic();
 }
 
 void Game::ResetPaddle()
@@ -320,6 +330,20 @@ int Game::BrickCount() {
     }
 
     return brickcount;
+}
+
+void Game::PlayMusic()
+{
+    if( Mix_PlayingMusic() == 0)
+    {
+        //Play the music
+        Mix_PlayMusic(music, -1);
+    }
+}
+
+void Game::StopMusic()
+{
+    Mix_HaltMusic();
 }
 
 

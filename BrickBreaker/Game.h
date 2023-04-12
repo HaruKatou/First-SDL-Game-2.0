@@ -28,6 +28,8 @@ private:
 
     SDL_Texture* texture;
 
+    Mix_Music* music;
+
     // Timing
     unsigned int curframe, lastframe;
     //unsigned int startframe, actualDelay;
@@ -54,6 +56,9 @@ private:
     void SideCollision(int sidehit);
 
     int BrickCount();
+
+    void PlayMusic();
+    void StopMusic();
 };
 
 
