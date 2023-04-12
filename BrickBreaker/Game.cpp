@@ -16,6 +16,11 @@ bool Game::Init()   //Initialize SDL
 		printf( "SDL could not initialize! SDL Error: %s\n", SDL_GetError() );
 		success = false;
 	}
+	else if( Mix_OpenAudio( 44100, MIX_DEFAULT_FORMAT, 2, 2048 ) < 0 )
+    {
+        printf( "SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError() );
+        success = false;
+    }
 	else
 	{
 
@@ -136,7 +141,7 @@ void Game::Update(float delta)
         if (Ball_on_Paddle)
         {
             Ball_on_Paddle = false;
-            ball->SetDirection(1, -1);
+            ball->SetDirection(0, -1);
         }
     }
 
