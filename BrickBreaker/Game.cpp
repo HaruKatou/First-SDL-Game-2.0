@@ -25,7 +25,7 @@ bool Game::Init()   //Initialize SDL
 	{
 
 		//Create window
-		window = SDL_CreateWindow("Brick Breakout",SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+		window = SDL_CreateWindow("Brick Breaker",SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
 		if(window==NULL)
 		{
 			printf( "Window could not be created! SDL Error: %s\n", SDL_GetError() );
@@ -141,7 +141,7 @@ void Game::Update(float delta)
         if (Ball_on_Paddle)
         {
             Ball_on_Paddle = false;
-            ball->SetDirection(0, -1);
+            ball->SetDirection(1, -1);
         }
     }
 
