@@ -4,8 +4,10 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_mixer.h>
+#include <SDL_ttf.h>
 #include <iostream>
 #include <stdio.h>
+#include <sstream>
 
 #include "Field.h"
 #include "Paddle.h"
@@ -27,6 +29,10 @@ private:
     SDL_Renderer* renderer;
 
     SDL_Texture* texture;
+
+    SDL_Surface* surface;
+
+    TTF_Font* font;
 
     Mix_Music* music;
 
@@ -59,6 +65,8 @@ private:
 
     void PlayMusic();
     void StopMusic();
+
+    void Score();
 };
 
 

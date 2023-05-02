@@ -25,15 +25,15 @@ bool Game::Init()   //Initialize SDL
 	{
 
 		//Create window
-		window = SDL_CreateWindow("Brick Breaker",SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+		window = SDL_CreateWindow("Brick Breakout",SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
 		if(window==NULL)
 		{
 			printf( "Window could not be created! SDL Error: %s\n", SDL_GetError() );
 			success = false;
 		}
-			//Create vsynced renderer for window
+			//Create renderer for window
         renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-        if(renderer==NULL)
+        if(renderer == NULL)
         {
             printf( "Renderer could not be created! SDL Error: %s\n", SDL_GetError() );
             success = false;
@@ -95,6 +95,7 @@ void Game::Run() //How the game works
     CleanUp();
 
     SDL_Quit();
+    Mix_Quit();
 }
 
 void Game::CleanUp()
@@ -136,7 +137,7 @@ void Game::Update(float delta)
     Uint32 mousestate = SDL_GetMouseState(&mouse_x, &mouse_y);
     SetPaddlePosition(mouse_x - paddle->width/2.0f);
 
-    if ( mousestate == SDL_BUTTON(1) )   //
+    if ( mousestate == SDL_BUTTON(1) )   //click to start game
     {
         if (Ball_on_Paddle)
         {
@@ -150,19 +151,22 @@ void Game::Update(float delta)
         InitBall();     //hold the ball on the paddle when move paddle
     }
 
+    FieldCollision();
+    PaddleCollision();
+    BrickCollision();
+    BrickCollision();
+
+    if (BrickCount() == BRICK_NUM_WIDTH * BRICK_NUM_HEIGHT)
+    {
+        StopMusic();
+        StartGame(); //reset
+    }
+
     if (!Ball_on_Paddle)
     {
         ball->Update(delta);
     }
-
-    FieldCollision();
-    PaddleCollision();
-    BrickCollision();
-
-    if (BrickCount() == 0)
-    {
-        StartGame(); //reset
-    }
+    Score();
 }
 
 void Game::Render()
@@ -235,8 +239,8 @@ void Game::BrickCollision() {
             // Check if brick is present
             if (field->bricks[i][j].condition) {
                 // Brick x and y coordinates
-                float brickx = field->x + i*BRICK_WIDTH;
-                float bricky = field->y + j*BRICK_HEIGHT;
+                float brickx = field->x + i*BRICK_WIDTH ;
+                float bricky = field->y + j*BRICK_HEIGHT ;
 
                 float w = 0.5f * (ball->width + BRICK_WIDTH); // Ball width + Brick width
                 float h = 0.5f * (ball->height + BRICK_HEIGHT);
@@ -254,8 +258,9 @@ void Game::BrickCollision() {
                     {
                         if (dy < 0)
                         {
-                            // Bottom (y is flipped)
+                            // Bottom
                             SideCollision(1);
+
                         }
                         else
                         {
@@ -285,16 +290,80 @@ void Game::BrickCollision() {
 
 void Game::SideCollision(int sidehit)
 {
-    // sidehit 0: Left, 1: Bottom, 2: Right, 3: Top
     int cx = 1;
     int cy = 1;
     if(sidehit == 0 || sidehit == 2)
         cx = -1;
-    else
+    else if(sidehit == 1 || sidehit == 3)
         cy = -1;
-
     ball->SetDirection(cx*ball->dirx, cy*ball->diry);
 }
+
+/*void Game::SideCollision(int sidehit)
+ {
+    // sidehit 0: Left, 1: Bottom, 2: Right, 3: Top
+
+    // coeficient factor
+    int cx = 1;
+    int cy = 1;
+
+    if (ball->dirx > 0)
+    {
+        if (ball->diry > 0)
+        {
+            // +1 +1
+            if (sidehit == 0 || sidehit == 3)
+            {
+                cx = -1;
+            }
+            else
+            {
+                cy = -1;
+            }
+        }
+        else if (ball->diry < 0)
+        {
+            // +1 -1
+            if (sidehit == 0 || sidehit == 1)
+            {
+                cx = -1;
+            }
+            else
+            {
+                cy = -1;
+            }
+        }
+    }
+    else if (ball->dirx < 0)
+    {
+        if (ball->diry > 0)
+            {
+            // -1 +1
+            if (sidehit == 2 || sidehit == 3)
+            {
+                cx = -1;
+            }
+            else
+            {
+                cy = -1;
+            }
+        }
+        else if (ball->diry < 0)
+        {
+            // -1 -1
+            if (sidehit == 1 || sidehit == 2)
+            {
+                cx = -1;
+            }
+            else
+            {
+                cy = -1;
+            }
+        }
+    }
+    // Set the new direction by multiplying the coefficient
+    ball->SetDirection(cx*ball->dirx, cy*ball->diry);
+}*/
 
 void Game::PaddleCollision()
 {
@@ -323,13 +392,14 @@ float Game::Reflection(float x)
 }
 
 
-int Game::BrickCount() {
+int Game::BrickCount()  //count the destroyed bricks
+{
     int brickcount = 0;
     for (int i=0; i<BRICK_NUM_WIDTH; i++)
     {
         for (int j=0; j<BRICK_NUM_HEIGHT; j++)
         {
-            if (field->bricks[i][j].condition)
+            if (field->bricks[i][j].condition == false)
                 brickcount++;
         }
     }
@@ -351,4 +421,11 @@ void Game::StopMusic()
     Mix_HaltMusic();
 }
 
+void Game::Score()
+{
+    int score = BrickCount() * 100;
+    std::stringstream textscore;
+    textscore << "BrickBreaker    Score: " << score;
+    SDL_SetWindowTitle( window, textscore.str().c_str());
+}
 
