@@ -43,18 +43,18 @@
 	"Game.h"
 	<math.h>
 
-1681312479 source:c:\users\zb\documents\first-sdl-game-2.0\brickbreaker\ball.cpp
+1683215489 source:c:\users\zb\documents\first-sdl-game-2.0\brickbreaker\ball.cpp
 	"Ball.h"
 
-1681300558 c:\users\zb\documents\first-sdl-game-2.0\brickbreaker\ball.h
+1683215496 c:\users\zb\documents\first-sdl-game-2.0\brickbreaker\ball.h
 	<SDL.h>
 	<SDL_image.h>
 	<math.h>
 
-1681049216 source:c:\users\zb\documents\first-sdl-game-2.0\brickbreaker\field.cpp
+1683215508 source:c:\users\zb\documents\first-sdl-game-2.0\brickbreaker\field.cpp
 	"Field.h"
 
-1681049284 c:\users\zb\documents\first-sdl-game-2.0\brickbreaker\field.h
+1683215515 c:\users\zb\documents\first-sdl-game-2.0\brickbreaker\field.h
 	<stdlib.h>
 	<time.h>
 	<SDL.h>
@@ -66,7 +66,7 @@
 1680409072 c:\users\zb\documents\first-sdl-game-2.0\brickbreaker\main.h
 	"game.h"
 
-1682999482 c:\users\zb\documents\first-sdl-game-2.0\brickbreaker\game.h
+1683215469 c:\users\zb\documents\first-sdl-game-2.0\brickbreaker\game.h
 	<SDL.h>
 	<SDL_image.h>
 	<SDL_mixer.h>
@@ -85,7 +85,7 @@
 1681047413 source:c:\users\zb\documents\first-sdl-game-2.0\brickbreaker\paddle.cpp
 	"Paddle.h"
 
-1681355389 source:c:\users\zb\documents\first-sdl-game-2.0\brickbreaker\game.cpp
+1683215477 source:c:\users\zb\documents\first-sdl-game-2.0\brickbreaker\game.cpp
 	"Game.h"
 	<math.h>
 

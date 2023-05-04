@@ -5,7 +5,6 @@
 #include <SDL_image.h>
 #include <math.h>
 
-const float BALL_SPEED = 500;
 
 class Ball
 {
@@ -14,6 +13,7 @@ public:
     ~Ball();
 
     float x, y, width, height;
+    float BALL_SPEED = 500;
 
     void Update(float delta);
     void Render();

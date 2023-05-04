@@ -2,7 +2,7 @@
 
 Field::Field(SDL_Renderer* field_renderer)
 {
-    renderer = field_renderer;
+    renderer = field_renderer;      //Field::renderer = Game::renderer
     SDL_Surface* surface = IMG_Load("bricks.png");
     BrickTexture = SDL_CreateTextureFromSurface(renderer, surface);
     SDL_FreeSurface(surface);
@@ -39,8 +39,8 @@ void Field::Render() {
             srcrect.h = 56;
 
             SDL_Rect dstrect;
-            dstrect.x = x + i * BRICK_WIDTH;                    //destination rect
-            dstrect.y = y + j * BRICK_HEIGHT;
+            dstrect.x = x + i * BRICK_WIDTH + i * SPACE;                    //destination rect
+            dstrect.y = j * BRICK_HEIGHT + j * SPACE;
             dstrect.w = BRICK_WIDTH;
             dstrect.h = BRICK_HEIGHT;
 

@@ -86,6 +86,9 @@ void Game::Run() //How the game works
         /*actualDelay = SDL_GetTicks() - startframe;
         if(FRAME_DELAY > actualDelay)
             SDL_Delay(FRAME_DELAY - actualDelay);*/
+
+        if(isRunning == false)  //Game stops by a condition somewhere
+            break;
     }
 
     delete paddle;
@@ -159,7 +162,13 @@ void Game::Update(float delta)
     if (BrickCount() == BRICK_NUM_WIDTH * BRICK_NUM_HEIGHT)
     {
         StopMusic();
-        StartGame(); //reset
+        GameWin();
+        if(level < 3)
+        {
+            level++;
+            ball->BALL_SPEED+=150;
+            StartGame();
+        }
     }
 
     if (!Ball_on_Paddle)
@@ -215,7 +224,13 @@ void Game::FieldCollision()
         // Reach the void
 
         // Bottom
-        ResetPaddle(); //GameOver();
+        if(life > 0)
+        {
+            ResetPaddle(); //GameOver();
+            life--;
+        }
+        else
+            GameLost();
     }
 
     if (ball->x <= field->x)
@@ -388,7 +403,7 @@ float Game::Reflection(float x)
     x -= paddle->width / 2.0f;
 
     // range of -1 to 1
-    return  x / (paddle->width / 2.0f);
+    return  x / (paddle->width / 2.0f);     //range of -2 to 2
 }
 
 
@@ -425,7 +440,26 @@ void Game::Score()
 {
     int score = BrickCount() * 100;
     std::stringstream textscore;
-    textscore << "BrickBreaker    Score: " << score;
+    textscore << "BrickBreaker              SCORE: " << score <<"               LIFE: "<<life;
     SDL_SetWindowTitle( window, textscore.str().c_str());
+}
+
+void Game::GameLost()
+{
+    SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Game over", "You lose! Restart the game to try again!", window);
+    isRunning = false;
+}
+
+void Game::GameWin()
+{
+    if(level == 1)
+        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "LEVEL 1 PASSED!", "You finished level 1! Hit OK to try the next level", window);
+    else if(level == 2)
+        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "LEVEL 2 PASSED!", "You finished level 2! Hit OK to try the next level", window);
+    else
+    {
+        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "You win", "You win! Restart the game to try again!", window);
+        isRunning = false;
+    }
 }
 

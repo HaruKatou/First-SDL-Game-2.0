@@ -10,9 +10,11 @@
 const int BRICK_WIDTH = 56;
 const int BRICK_HEIGHT = 28;
 
-// the number of bricks 10x10
+// the number of bricks 14x10
 const int BRICK_NUM_WIDTH = 14;
 const int BRICK_NUM_HEIGHT = 10;
+
+const int SPACE = 0;
 
 class Brick
 {

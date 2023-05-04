@@ -45,6 +45,9 @@ private:
     Paddle* paddle;
     Ball* ball;
     bool Ball_on_Paddle;
+    bool isRunning = true;
+    int life = 3;
+    int level = 1;
 
     void Update(float delta);
     void Render();
@@ -67,6 +70,8 @@ private:
     void StopMusic();
 
     void Score();
+    void GameLost();
+    void GameWin();
 };
 
 
