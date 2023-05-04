@@ -39,8 +39,8 @@ void Field::Render() {
             srcrect.h = 56;
 
             SDL_Rect dstrect;
-            dstrect.x = x + i * BRICK_WIDTH + i * SPACE;                    //destination rect
-            dstrect.y = j * BRICK_HEIGHT + j * SPACE;
+            dstrect.x = x + i * BRICK_WIDTH ;                    //destination rect
+            dstrect.y = j * BRICK_HEIGHT ;
             dstrect.w = BRICK_WIDTH;
             dstrect.h = BRICK_HEIGHT;
 
