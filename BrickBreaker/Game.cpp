@@ -7,6 +7,7 @@ Game::Game()
 Game::~Game()
 {}
 
+
 bool Game::Init()   //Initialize SDL
 {
     bool success = true;
@@ -31,13 +32,15 @@ bool Game::Init()   //Initialize SDL
 			printf( "Window could not be created! SDL Error: %s\n", SDL_GetError() );
 			success = false;
 		}
-			//Create renderer for window
+
+        //Create renderer for window
         renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
         if(renderer == NULL)
         {
             printf( "Renderer could not be created! SDL Error: %s\n", SDL_GetError() );
             success = false;
         }
+
         //create music
         music = Mix_LoadMUS( "Will.wav" );
         if( music == NULL)
@@ -45,6 +48,17 @@ bool Game::Init()   //Initialize SDL
         printf( "Failed to load beat music! SDL_mixer Error: %s\n", Mix_GetError() );
         success = false;
         }
+
+        //create sound effect
+        sound = Mix_LoadWAV("collide.wav");
+        if( sound == NULL )
+        {
+        printf( "Failed to load medium sound effect! SDL_mixer Error: %s\n", Mix_GetError() );
+        success = false;
+        }
+
+        //Set font
+        font = TTF_OpenFont("Cramps.ttf",20);
     }
     lastframe = SDL_GetTicks();
     return success;
@@ -53,11 +67,13 @@ bool Game::Init()   //Initialize SDL
 
 void Game::Run() //How the game works
 {
+
     field = new Field(renderer);
     paddle = new Paddle(renderer);
     ball = new Ball(renderer);
 
     StartGame();
+
 
     // Game loop
     while (1)
@@ -104,6 +120,8 @@ void Game::Run() //How the game works
 void Game::CleanUp()
 {
     Mix_FreeMusic(music);
+
+    Mix_FreeChunk(sound);
 
     SDL_DestroyTexture(texture);
 
@@ -166,7 +184,7 @@ void Game::Update(float delta)
         if(level < 3)
         {
             level++;
-            ball->BALL_SPEED+=150;
+            ball->BALL_SPEED += 150;        //Ball go faster
             StartGame();
         }
     }
@@ -264,6 +282,7 @@ void Game::BrickCollision() {
 
                 if (fabs(dx) <= w && fabs(dy) <= h) {
                     // Collision detected
+                    PlaySoundEffect();
                     field->bricks[i][j].condition = false;
 
                     float wy = w * fabs(dy);
@@ -273,13 +292,12 @@ void Game::BrickCollision() {
                     {
                         if (dy < 0)
                         {
-                            // Bottom
+                            // Top (axis reversed)
                             SideCollision(1);
-
                         }
                         else
                         {
-                            // Top
+                            // Bottom
                             SideCollision(3);
                         }
                     }
@@ -303,7 +321,7 @@ void Game::BrickCollision() {
     }
 }
 
-void Game::SideCollision(int sidehit)
+/*void Game::SideCollision(int sidehit)     //Basic reflecting logic
 {
     int cx = 1;
     int cy = 1;
@@ -312,11 +330,11 @@ void Game::SideCollision(int sidehit)
     else if(sidehit == 1 || sidehit == 3)
         cy = -1;
     ball->SetDirection(cx*ball->dirx, cy*ball->diry);
-}
+}*/
 
-/*void Game::SideCollision(int sidehit)
+void Game::SideCollision(int sidehit)       //Solving bugs involving hitting the intersection of 2 bricks
  {
-    // sidehit 0: Left, 1: Bottom, 2: Right, 3: Top
+    // sidehit 0: Left, 1: Top, 2: Right, 3: Bottom
 
     // coeficient factor
     int cx = 1;
@@ -336,7 +354,7 @@ void Game::SideCollision(int sidehit)
                 cy = -1;
             }
         }
-        else if (ball->diry < 0)
+        else if (ball->diry <= 0)
         {
             // +1 -1
             if (sidehit == 0 || sidehit == 1)
@@ -349,7 +367,7 @@ void Game::SideCollision(int sidehit)
             }
         }
     }
-    else if (ball->dirx < 0)
+    else if (ball->dirx <= 0)
     {
         if (ball->diry > 0)
             {
@@ -363,7 +381,7 @@ void Game::SideCollision(int sidehit)
                 cy = -1;
             }
         }
-        else if (ball->diry < 0)
+        else if (ball->diry <= 0)
         {
             // -1 -1
             if (sidehit == 1 || sidehit == 2)
@@ -378,7 +396,7 @@ void Game::SideCollision(int sidehit)
     }
     // Set the new direction by multiplying the coefficient
     ball->SetDirection(cx*ball->dirx, cy*ball->diry);
-}*/
+}
 
 void Game::PaddleCollision()
 {
@@ -403,7 +421,7 @@ float Game::Reflection(float x)
     x -= paddle->width / 2.0f;
 
     // range of -1 to 1
-    return  x / (paddle->width / 2.0f);     //range of -2 to 2
+    return  x / (paddle->width / 2.0f);
 }
 
 
@@ -431,6 +449,11 @@ void Game::PlayMusic()
     }
 }
 
+void Game::PlaySoundEffect()
+{
+    Mix_PlayChannel(-1, sound, 0);
+}
+
 void Game::StopMusic()
 {
     Mix_HaltMusic();
@@ -440,7 +463,8 @@ void Game::Score()
 {
     int score = BrickCount() * 100;
     std::stringstream textscore;
-    textscore << "BrickBreaker              SCORE: " << score <<"               LIFE: "<<life;
+    textscore << "BrickBreaker                                                                            SCORE: " << score <<"       ||        LIFE: "<<life;
+
     SDL_SetWindowTitle( window, textscore.str().c_str());
 }
 
@@ -462,4 +486,10 @@ void Game::GameWin()
         isRunning = false;
     }
 }
+
+/*void Game::ShowHitSpot()
+{
+    std::cout<<HitSpot<<" ";
+}*/
+
 

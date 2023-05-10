@@ -26,15 +26,18 @@ public:
 
 private:
     SDL_Window* window;
+
     SDL_Renderer* renderer;
 
     SDL_Texture* texture;
 
-    SDL_Surface* surface;
+    SDL_Surface* screen;
 
     TTF_Font* font;
 
     Mix_Music* music;
+
+    Mix_Chunk* sound;
 
     // Timing
     unsigned int curframe, lastframe;
@@ -48,6 +51,7 @@ private:
     bool isRunning = true;
     int life = 3;
     int level = 1;
+    int HitSpot;
 
     void Update(float delta);
     void Render();
@@ -68,10 +72,13 @@ private:
 
     void PlayMusic();
     void StopMusic();
+    void PlaySoundEffect();
 
     void Score();
     void GameLost();
     void GameWin();
+    void ShowHitSpot();
+
 };
 
 

@@ -14,7 +14,6 @@ const int BRICK_HEIGHT = 28;
 const int BRICK_NUM_WIDTH = 14;
 const int BRICK_NUM_HEIGHT = 10;
 
-
 class Brick
 {
 public:
