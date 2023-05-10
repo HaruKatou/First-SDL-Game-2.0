@@ -49,6 +49,7 @@ private:
     Ball* ball;
     bool Ball_on_Paddle;
     bool isRunning = true;
+
     int life = 3;
     int level = 1;
     int HitSpot;
@@ -74,7 +75,7 @@ private:
     void StopMusic();
     void PlaySoundEffect();
 
-    void Score();
+    void ShowScore();
     void GameLost();
     void GameWin();
     void ShowHitSpot();

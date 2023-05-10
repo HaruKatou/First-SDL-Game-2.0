@@ -42,7 +42,7 @@ bool Game::Init()   //Initialize SDL
         }
 
         //create music
-        music = Mix_LoadMUS( "Will.wav" );
+        music = Mix_LoadMUS( "opt.wav" );
         if( music == NULL)
         {
         printf( "Failed to load beat music! SDL_mixer Error: %s\n", Mix_GetError() );
@@ -57,8 +57,6 @@ bool Game::Init()   //Initialize SDL
         success = false;
         }
 
-        //Set font
-        font = TTF_OpenFont("Cramps.ttf",20);
     }
     lastframe = SDL_GetTicks();
     return success;
@@ -85,7 +83,7 @@ void Game::Run() //How the game works
         {
             if (e.type == SDL_QUIT)
                 {
-                break;          //break from while
+                break;          // break from while
                 }
         }
 
@@ -103,11 +101,11 @@ void Game::Run() //How the game works
         if(FRAME_DELAY > actualDelay)
             SDL_Delay(FRAME_DELAY - actualDelay);*/
 
-        if(isRunning == false)  //Game stops by a condition somewhere
+        if(isRunning == false)  // Game stops by a condition somewhere
             break;
     }
 
-    delete paddle;
+    delete paddle;          // Clean up if the game ended
     delete ball;
     delete field;
 
@@ -117,7 +115,7 @@ void Game::Run() //How the game works
     Mix_Quit();
 }
 
-void Game::CleanUp()
+void Game::CleanUp()        // Clean up when the game ended
 {
     Mix_FreeMusic(music);
 
@@ -156,11 +154,11 @@ void Game::Update(float delta)
     // mouse handling
     int mouse_x, mouse_y;
     Uint32 mousestate = SDL_GetMouseState(&mouse_x, &mouse_y);
-    SetPaddlePosition(mouse_x - paddle->width/2.0f);
+    SetPaddlePosition(mouse_x - paddle->width/2.0f);            // mouse point at middle of paddle
 
-    if ( mousestate == SDL_BUTTON(1) )   //click to start game
+    if ( mousestate == SDL_BUTTON(1) )   // click to start game
     {
-        if (Ball_on_Paddle)
+        if (Ball_on_Paddle)         // ball leaves paddle
         {
             Ball_on_Paddle = false;
             ball->SetDirection(1, -1);
@@ -169,22 +167,21 @@ void Game::Update(float delta)
 
     if (Ball_on_Paddle)
     {
-        InitBall();     //hold the ball on the paddle when move paddle
+        InitBall();     // hold the ball on the paddle when move paddle
     }
 
-    FieldCollision();
+    FieldCollision();       // handling collisions
     PaddleCollision();
     BrickCollision();
     BrickCollision();
 
     if (BrickCount() == BRICK_NUM_WIDTH * BRICK_NUM_HEIGHT)
     {
-        StopMusic();
         GameWin();
         if(level < 3)
         {
             level++;
-            ball->BALL_SPEED += 150;        //Ball go faster
+            ball->BALL_SPEED += 150;        // Ball go faster
             StartGame();
         }
     }
@@ -193,7 +190,7 @@ void Game::Update(float delta)
     {
         ball->Update(delta);
     }
-    Score();
+    ShowScore();
 }
 
 void Game::Render()
@@ -207,10 +204,11 @@ void Game::Render()
     SDL_RenderPresent(renderer);
 }
 
-void Game::SetPaddlePosition(float x)
+void Game::SetPaddlePosition(float x)       // Set the x rect of paddle
 {
-    float out_x;        // x for the output wanted
-    //keep the paddle inside of the field
+    float out_x;   // x for the output wanted
+
+    // keep the paddle inside of the field
     if (x < field->x)
     {
         // Left
@@ -230,7 +228,7 @@ void Game::SetPaddlePosition(float x)
 
 void Game::FieldCollision()
 {
-    if (ball->y < field->y)
+    if (ball->y < field->y)     // Hit top wall
     {
         // Top
         ball->y = field->y;
@@ -251,13 +249,13 @@ void Game::FieldCollision()
             GameLost();
     }
 
-    if (ball->x <= field->x)
+    if (ball->x < field->x)
     {
         // Left
         ball->x = field->x;
         ball->dirx *= -1;
     }
-    else if (ball->x + ball->width >= field->x + field->width)
+    else if (ball->x + ball->width > field->x + field->width)
     {
         // Right
         ball->x = field->x + field->width - ball->width;
@@ -272,8 +270,8 @@ void Game::BrickCollision() {
             // Check if brick is present
             if (field->bricks[i][j].condition) {
                 // Brick x and y coordinates
-                float brickx = field->x + i*BRICK_WIDTH ;
-                float bricky = field->y + j*BRICK_HEIGHT ;
+                float brickx = field->x + i*BRICK_WIDTH;
+                float bricky = field->y + j*BRICK_HEIGHT;
 
                 float w = 0.5f * (ball->width + BRICK_WIDTH); // Ball width + Brick width
                 float h = 0.5f * (ball->height + BRICK_HEIGHT);
@@ -414,7 +412,7 @@ void Game::PaddleCollision()
     }
 }
 
-float Game::Reflection(float x)
+float Game::Reflection(float x) // range of x from 0 to paddle->width
 {
 
     // Everything to the left of the center of the paddle is reflected to the left and vice versa
@@ -459,17 +457,18 @@ void Game::StopMusic()
     Mix_HaltMusic();
 }
 
-void Game::Score()
+void Game::ShowScore()
 {
     int score = BrickCount() * 100;
     std::stringstream textscore;
     textscore << "BrickBreaker                                                                            SCORE: " << score <<"       ||        LIFE: "<<life;
 
-    SDL_SetWindowTitle( window, textscore.str().c_str());
+    SDL_SetWindowTitle( window, textscore.str().c_str());       //Put score on window title
 }
 
 void Game::GameLost()
 {
+    StopMusic();
     SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Game over", "You lose! Restart the game to try again!", window);
     isRunning = false;
 }
@@ -482,6 +481,7 @@ void Game::GameWin()
         SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "LEVEL 2 PASSED!", "You finished level 2! Hit OK to try the next level", window);
     else
     {
+        StopMusic();
         SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "You win", "You win! Restart the game to try again!", window);
         isRunning = false;
     }
